@@ -1,0 +1,26 @@
+{
+  "total_leaks": 4,
+  "vulnerabilities": [
+    {
+      "file": ".\\secret.text",
+      "line": 1,
+      "issue_type": "AWS Access Key"
+    },
+    {
+      "file": ".\\src\\signatures.rs",
+      "line": 60,
+      "issue_type": "AWS Access Key"
+    },
+    {
+      "file": ".\\src\\signatures.rs",
+      "line": 68,
+      "issue_type": "PostgreSQL Connection String"
+    },
+    {
+      "file": ".\\tests\\cli_test.rs",
+      "line": 18,
+      "issue_type": "AWS Access Key"
+    }
+  ],
+  "scan_duration_ms": 159
+}

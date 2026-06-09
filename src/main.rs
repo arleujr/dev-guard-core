@@ -19,11 +19,11 @@ fn main() {
     if args.contains(&String::from("--install-hook")) {
         match hook::install_pre_commit_hook() {
             Ok(_) => {
-                println!("{} Git pre-commit hook installed successfully!", "✅ [Dev-Guard]".green().bold());
+                println!("{} Git pre-commit hook installed successfully!", "[Dev-Guard]".green().bold());
                 std::process::exit(0);
             }
             Err(e) => {
-                eprintln!("{} {}", "❌ Hook installation failed:".red().bold(), e);
+                eprintln!("{} {}", "Hook installation failed:".red().bold(), e);
                 std::process::exit(1);
             }
         }
@@ -32,7 +32,7 @@ fn main() {
     let is_incremental = args.contains(&String::from("--diff"));
     let generate_json = args.contains(&String::from("--json"));
 
-    println!("{}", "🚀 [Dev-Guard] Initiating Workspace Security Audit...".cyan().bold());
+    println!("{}", "[Dev-Guard] Initiating Workspace Security Audit...".cyan().bold());
     let start_time = Instant::now();
 
     let sig_scanner = signatures::SignatureScanner::new();
@@ -71,11 +71,11 @@ fn main() {
 
     // Ingestion Layer: Route between differential staged scan or recursive traversal
     let result = if is_incremental {
-        println!("{}", "ℹ️  Incremental mode: Scanning only staged files.".bright_black());
+        println!("{}", "Incremental mode: Scanning only staged files.".bright_black());
         match git::get_staged_files() {
             Ok(files) => scanner::scan_specific_files(&files, &mut process_line),
             Err(e) => {
-                eprintln!("{} {}", "❌ Git integration error:".red().bold(), e);
+                eprintln!("{} {}", "Git integration error:".red().bold(), e);
                 std::process::exit(1);
             }
         }
@@ -84,7 +84,7 @@ fn main() {
     };
 
     if let Err(e) = result {
-        eprintln!("{} {}", "❌ Critical scanning error:".red().bold(), e);
+        eprintln!("{} {}", "Critical scanning error:".red().bold(), e);
         std::process::exit(1);
     }
 
@@ -101,9 +101,9 @@ fn main() {
         
         let output_path = Path::new("dev-guard-report.json");
         if let Err(e) = report::generate_json_report(&sec_report, output_path) {
-            eprintln!("{} {}", "⚠️  Failed to write JSON report:".yellow().bold(), e);
+            eprintln!("{} {}", "Failed to write JSON report:".yellow().bold(), e);
         } else {
-            println!("{} Report exported to {}", "📄 [Dev-Guard]".blue().bold(), output_path.display().bold());
+            println!("{} Report exported to {}", "[Dev-Guard]".blue().bold(), output_path.display().bold());
         }
     }
 
@@ -111,10 +111,10 @@ fn main() {
     
     // Deterministic Exit Code handling for secure CI/CD integrations
     if total_leaks > 0 {
-        println!("{} {} leaks found in {:.2?}", "⚠️  Audit Failed:".red().bold(), total_leaks, duration);
+        println!("{} {} leaks found in {:.2?}", "Audit Failed:".red().bold(), total_leaks, duration);
         std::process::exit(1); // Blocks Git commits or breaks build pipelines
     } else {
-        println!("{} Workspace is secure. (Scanned in {:.2?})", "✅ Audit Passed:".green().bold(), duration);
+        println!("{} Workspace is secure. (Scanned in {:.2?})", "Audit Passed:".green().bold(), duration);
         std::process::exit(0); // Authorizes workflow transition
     }
 }
