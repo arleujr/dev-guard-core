@@ -1,5 +1,6 @@
 mod entropy;
-mod git; // Novo módulo
+mod git;
+mod hook; // Novo módulo
 mod scanner;
 mod signatures;
 
@@ -8,8 +9,22 @@ use std::path::Path;
 use std::time::Instant;
 
 fn main() {
-    // Basic argument parsing without heavy dependencies like clap
     let args: Vec<String> = std::env::args().collect();
+    
+    // Intercepts the execution if the user just wants to install the hook
+    if args.contains(&String::from("--install-hook")) {
+        match hook::install_pre_commit_hook() {
+            Ok(_) => {
+                println!("{} Git pre-commit hook installed successfully!", "✅ [Dev-Guard]".green().bold());
+                std::process::exit(0);
+            }
+            Err(e) => {
+                eprintln!("{} {}", "❌ Hook installation failed:".red().bold(), e);
+                std::process::exit(1);
+            }
+        }
+    }
+
     let is_incremental = args.contains(&String::from("--diff"));
 
     println!("{}", "🚀 [Dev-Guard] Initiating Workspace Security Audit...".cyan().bold());
